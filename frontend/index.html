@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Книжный Чат-Бот</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Контейнер для аутентификации -->
+    <div id="auth-container" class="container">
+        <div class="auth-box">
+            <div class="auth-header">
+                <h1><i class="fas fa-book"></i> Книжный Чат-Бот</h1>
+                <p class="subtitle">Найди свою следующую любимую книгу</p>
+            </div>
+            
+            <!-- Форма входа -->
+            <div id="login-form" class="auth-form active">
+                <h2>Вход в систему</h2>
+                <div class="form-group">
+                    <label for="login-username"><i class="fas fa-user"></i> Имя пользователя</label>
+                    <input type="text" id="login-username" placeholder="Введите имя пользователя">
+                    <span class="error-message" id="login-username-error"></span>
+                </div>
+                <div class="form-group">
+                    <label for="login-password"><i class="fas fa-lock"></i> Пароль</label>
+                    <input type="password" id="login-password" placeholder="Введите пароль">
+                    <span class="error-message" id="login-password-error"></span>
+                </div>
+                <button id="login-btn" class="btn-primary">
+                    <i class="fas fa-sign-in-alt"></i> Войти
+                </button>
+                <p class="auth-switch">
+                    Нет аккаунта? <a href="#" id="show-register">Зарегистрироваться</a>
+                </p>
+            </div>
+            
+            <!-- Форма регистрации -->
+            <div id="register-form" class="auth-form">
+                <h2>Регистрация</h2>
+                <div class="form-group">
+                    <label for="register-username"><i class="fas fa-user"></i> Имя пользователя</label>
+                    <input type="text" id="register-username" placeholder="Придумайте имя пользователя">
+                    <span class="error-message" id="register-username-error"></span>
+                </div>
+                <div class="form-group">
+                    <label for="register-email"><i class="fas fa-envelope"></i> Email</label>
+                    <input type="email" id="register-email" placeholder="Введите ваш email">
+                    <span class="error-message" id="register-email-error"></span>
+                </div>
+                <div class="form-group">
+                    <label for="register-password"><i class="fas fa-lock"></i> Пароль</label>
+                    <input type="password" id="register-password" placeholder="Придумайте пароль">
+                    <span class="error-message" id="register-password-error"></span>
+                </div>
+                <div class="form-group">
+                    <label for="register-password-confirm"><i class="fas fa-lock"></i> Подтверждение пароля</label>
+                    <input type="password" id="register-password-confirm" placeholder="Повторите пароль">
+                    <span class="error-message" id="register-password-confirm-error"></span>
+                </div>
+                <button id="register-btn" class="btn-primary">
+                    <i class="fas fa-user-plus"></i> Зарегистрироваться
+                </button>
+                <p class="auth-switch">
+                    Уже есть аккаунт? <a href="#" id="show-login">Войти</a>
+                </p>
+            </div>
+        </div>
+        
+        <div class="features">
+            <h3>Что умеет наш бот?</h3>
+            <div class="feature-grid">
+                <div class="feature">
+                    <i class="fas fa-search"></i>
+                    <h4>Поиск книг</h4>
+                    <p>Найди книги по жанру, автору или настроению</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-lightbulb"></i>
+                    <h4>Персональные рекомендации</h4>
+                    <p>Получай рекомендации на основе твоих предпочтений</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-comments"></i>
+                    <h4>Интеллектуальный диалог</h4>
+                    <p>Общайся с ботом как с настоящим книжным экспертом</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Контейнер для чата (изначально скрыт) -->
+    <div id="chat-container" class="container hidden">
+        <!-- Шапка с информацией о пользователе -->
+        <header class="chat-header">
+            <div class="header-left">
+                <h1><i class="fas fa-robot"></i> Книжный Чат-Бот</h1>
+                <div class="user-info">
+                    <span id="current-username"></span>
+                    <button id="logout-btn" type="button" class="btn-logout">
+                        <i class="fas fa-sign-out-alt"></i> Выйти
+                    </button>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="stats">
+                    <span><i class="fas fa-book"></i> <span id="book-count">0</span> книг</span>
+                    <span><i class="fas fa-comment"></i> <span id="message-count">0</span> сообщений</span>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Основной контейнер чата -->
+        <div class="chat-main">
+            <!-- Боковая панель с историей чатов -->
+            <aside class="chat-sidebar">
+                <div class="sidebar-header">
+                    <h3><i class="fas fa-history"></i> История</h3>
+                    <button id="new-chat-btn" type="button" class="btn-new-chat">
+                        <i class="fas fa-plus"></i> Новый чат
+                    </button>
+                </div>
+                <div class="chat-history" id="chat-history">
+                    <!-- История чатов будет загружаться здесь -->
+                </div>
+            </aside>
+            
+            <!-- Основная область чата -->
+            <main class="chat-area">
+                <div class="messages-container" id="messages-container">
+                    <!-- Сообщения будут добавляться здесь -->
+                    <div class="welcome-message">
+                        <div class="message bot-message">
+                            <div class="message-content">
+                                <strong>Книжный Бот:</strong> Добро пожаловать! Я помогу вам найти интересные книги. 
+                                Вы можете спросить меня о книгах по жанру, автору или просто рассказать, что вам нравится.
+                            </div>
+                        </div>
+                        <div class="suggestions">
+                            <h4>Примеры запросов:</h4>
+                            <div class="suggestion-chips">
+                                <button class="suggestion-chip" type="button" data-query="Рекомендуй книги в жанре фэнтези">
+                                    Рекомендуй книги в жанре фэнтези
+                                </button>
+                                <button class="suggestion-chip" type="button" data-query="Какие книги похожи на Гарри Поттера?">
+                                    Какие книги похожи на Гарри Поттера?
+                                </button>
+                                <button class="suggestion-chip" type="button" data-query="Посоветуй что-то легкое для чтения">
+                                    Посоветуй что-то легкое для чтения
+                                </button>
+                                <button class="suggestion-chip" type="button" data-query="Книги про любовь с хорошим концом">
+                                    Книги про любовь с хорошим концом
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Индикатор набора сообщения -->
+                <div class="typing-indicator" id="typing-indicator">
+                    <div class="typing-dots">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                    <span>Бот печатает...</span>
+                </div>
+                
+                <!-- Поле в ввода сообщения -->
+                <div class="input-container">
+                    <div class="input-wrapper">
+                        <input 
+                            type="text" 
+                            id="message-input" 
+                            placeholder="Напишите сообщение... (например: 'Посоветуй книгу в жанре детектив')"
+                            maxlength="500"
+                        >
+                        <button id="send-btn" type="button" class="btn-send">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </main>
+            
+            <!-- Боковая панель с рекомендациями -->
+            <aside class="recommendations-sidebar">
+                <div class="sidebar-header">
+                    <h3><i class="fas fa-star"></i> Рекомендации</h3>
+                </div>
+                <div class="recommendations-list" id="recommendations-list">
+                    <!-- Рекомендации книг будут появляться здесь -->
+                    <div class="empty-recommendations">
+                        <i class="fas fa-book-open"></i>
+                        <p>Здесь появятся рекомендации книг</p>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Модальное окно для информации о книге -->
+    <div id="book-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div id="book-modal-content">
+                <!-- Контент модального окна будет загружаться здесь -->
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
